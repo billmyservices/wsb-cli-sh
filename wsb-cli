@@ -1,0 +1,164 @@
+#!/bin/bash
+
+DEFAULT_WSB_URL="http://services.billmyservices.com"
+
+function howto {
+  >&2 cat << END
+Web Service Billing command line interface
+(c) wsb@computer-mind.com 2017
+
+Usage:
+
+  $0 list
+  $0 read   <counter-type-code>
+  $0 add    <counter-type-code> <name> <value> <min> <max> <version>
+  $0 delete <counter-type-code>
+  $0 get    <counter-type-code> <counter-code>
+  $0 post   <counter-type-code> <counter-code> <value>
+  $0 reset  <counter-type-code> <counter-code>
+
+ENVIRONMENT VARIABLES:
+
+  WSB_USERID  your user id into the WSB site https://www.billmyservices.com
+  WSB_SKEY    your secret key for messaging authentication and integrity, go to your user profile to get one
+  WSB_URL     url to the WSB endpoint (default $DEFAULT_WSB_URL)
+  WSB_CURL    optional curl parameters
+
+END
+}
+
+URL="$WSB_URL"
+USERID="$WSB_USERID"
+SKEY64="$WSB_SKEY"
+ACTION="$1"
+
+if [ -z "$URL" ]
+then
+  URL="$DEFAULT_WSB_URL"
+fi
+
+if [ -z "$USERID" ] || [ -z "$SKEY64" ] || [ -z "$ACTION" ]
+then
+  howto
+  exit 1
+else
+  case $ACTION in
+    "list")
+      METHOD="GET"
+      ;;
+    "read")
+      METHOD="GET"
+      CTCODE="$2"
+      if [ -z "$CTCODE" ]
+      then
+        >&2 echo "ERROR $0: wrong arguments"
+        howto
+        exit 1
+      else
+        DATA="${CTCODE}"
+        ROUTE="/${CTCODE}"
+      fi
+      ;;
+    "delete")
+      METHOD="DELETE"
+      CTCODE="$2"
+      if [ -z "$CTCODE" ]
+      then
+        >&2 echo "ERROR $0: wrong arguments"
+        howto
+        exit 1
+      else
+        DATA="${CTCODE}"
+        ROUTE="/${CTCODE}"
+      fi
+      ;;
+    "add")
+      METHOD="PUT"
+      CTCODE="$2"
+      CTNAME="$3"
+      CTVALUE="$4"
+      CTK1="$5"
+      CTK2="$6"
+      CTVERSION="$7"
+      if [ -z "$CTVERSION" ]
+      then
+        >&2 echo "ERROR $0: wrong arguments"
+        howto
+        exit 1
+      else
+        DATA="${CTCODE}${CTNAME}${CTVALUE}${CTK1}${CTK2}${CTVERSION}"
+        HEADER1="wsb-name: $CTNAME"
+        HEADER2="wsb-value: $CTVALUE"
+        HEADER3="wsb-k1: $CTK1"
+        HEADER4="wsb-k2: $CTK2"
+        HEADER5="wsb-mode: $CTVERSION"
+        ROUTE="/${CTCODE}"
+      fi
+      ;;
+    "get")
+      METHOD="GET"
+      CTCODE="$2"
+      CCODE="$3"
+      if [ -z "$CTCODE" ] || [ -z "$CCODE" ]
+      then
+        >&2 echo "ERROR $0: wrong arguments"
+        howto
+        exit 1
+      else
+        DATA="${CTCODE}${CCODE}"
+        ROUTE="/${CTCODE}/${CCODE}"
+      fi
+      ;;
+    "post")
+      METHOD="POST"
+      CTCODE="$2"
+      CCODE="$3"
+      VALUE="$4"
+      if [ -z "$CTCODE" ] || [ -z "$CCODE" ] || [ -z "$VALUE" ]
+      then
+        >&2 echo "ERROR $0: wrong arguments"
+        howto
+        exit 1
+      else
+        DATA="${CTCODE}${CCODE}${VALUE}"
+        HEADER2="wsb-value: $VALUE"
+        ROUTE="/${CTCODE}/${CCODE}"
+      fi
+      ;;
+    "reset")
+      METHOD="DELETE"
+      CTCODE="$2"
+      CCODE="$3"
+      if [ -z "$CTCODE" ] || [ -z "$CCODE" ]
+      then
+        >&2 echo "ERROR $0: wrong arguments"
+        howto
+        exit 1
+      else
+        DATA="${CTCODE}${CCODE}"
+        ROUTE="/${CTCODE}/${CCODE}"
+      fi
+      ;;
+    *)
+      howto
+      exit 1
+      ;;
+  esac
+  TIME=`date +%s`
+  SKEY=`echo -n $SKEY64 | base64 --decode | xxd -p -c80`
+  HMAC=`echo -n "${USERID}${DATA}${TIME}" | openssl dgst -sha256 -mac HMAC -macopt hexkey:$SKEY -binary | base64`
+  curl  $WSB_CURL \
+        -H "wsb-time: $TIME" \
+        -H "wsb-hmac: $HMAC" \
+        -H "$HEADER1" \
+        -H "$HEADER2" \
+        -H "$HEADER3" \
+        -H "$HEADER4" \
+        -H "$HEADER5" \
+        --fail -s -X $METHOD \
+        "$URL/${USERID}${ROUTE}"
+  SCODE=$?
+  if test "$SCODE" != "0"; then
+    exit 1
+  fi
+fi

@@ -1,0 +1,106 @@
+#!/bin/bash
+
+if [ -z "$WSB_URL" ]
+then
+  >&2 echo "ERROR, WSB_URL not settled"
+  exit 1
+fi
+
+if [ -z "$WSB_USERID" ]
+then
+  >&2 echo "ERROR, WSB_USERID not settled"
+  exit 1
+fi
+
+if [ -z "$WSB_SKEY" ]
+then
+  >&2 echo "ERROR, WSB_SKEY not settled"
+  exit 1
+fi
+
+if ./wsb-cli list > /dev/null
+then
+  echo "TEST 'list' success"
+else
+  >&2 echo "TEST 'list' failed, expected to be empty <<<<<<<<<<<<<<<<<<<<<<<"
+fi
+
+if ! ./wsb-cli read foo > /dev/null
+then
+  echo "TEST 'read foo' success returning fail"
+else
+  >&2 echo "TEST 'read foo' failed, expected to fail but return success <<<<<<<<<<<<<<<<<<<<<<<"
+fi
+
+if ! ./wsb-cli get foo bar > /dev/null
+then
+  echo "TEST 'get foo bar' success returning fail"
+else
+  >&2 echo "TEST 'get foo bar' failed, expected to fail but return success <<<<<<<<<<<<<<<<<<<<<<<"
+fi
+
+if ./wsb-cli add foo 'Foo Counter Type' 0 -5 5 AbsoluteCounter > /dev/null
+then
+  echo "TEST 'add foo' success"
+else
+  >&2 echo "TEST 'add foo' failed <<<<<<<<<<<<<<<<<<<<<<<"
+fi
+
+if ./wsb-cli get foo bar > /dev/null
+then
+  echo "TEST 'get foo bar' success"
+else
+  >&2 echo "TEST 'get foo bar' failed <<<<<<<<<<<<<<<<<<<<<<<"
+fi
+
+for j in 1 2
+do
+  for i in `seq 1 5`
+  do
+    if ./wsb-cli post foo bar 1 > /dev/null
+    then
+      echo "TEST 'post foo bar 1' success"
+    else
+      >&2 echo "TEST 'post foo bar 1' failed <<<<<<<<<<<<<<<<<<<<<<<"
+    fi
+  done
+
+  if ! ./wsb-cli post foo bar 1 > /dev/null
+  then
+    echo "TEST 'post foo bar 1' success returning fail"
+  else
+    >&2 echo "TEST 'post foo bar 1' failed, expected to fail but return success <<<<<<<<<<<<<<<<<<<<<<<"
+  fi
+
+  for i in `seq 1 5`
+  do
+    if ./wsb-cli post foo bar -2 > /dev/null
+    then
+      echo "TEST 'post foo bar -2' success"
+    else
+      >&2 echo "TEST 'post foo bar -2' failed <<<<<<<<<<<<<<<<<<<<<<<"
+    fi
+  done
+
+  if ! ./wsb-cli post foo bar -1 > /dev/null
+  then
+    echo "TEST 'post foo bar -1' success returning fail"
+  else
+    >&2 echo "TEST 'post foo bar -1' failed, expected to fail but return success <<<<<<<<<<<<<<<<<<<<<<<"
+  fi
+
+  if ./wsb-cli reset foo bar > /dev/null
+  then
+    echo "TEST 'reset foo bar' success (never fail)"
+  else
+    >&2 echo "TEST 'reset foo bar' failed <<<<<<<<<<<<<<<<<<<<<<<"
+  fi
+done
+
+if ./wsb-cli delete foo > /dev/null
+then
+  echo "TEST 'delete foo' success"
+else
+  >&2 echo "TEST 'delete foo' failed <<<<<<<<<<<<<<<<<<<<<<<"
+fi
+
