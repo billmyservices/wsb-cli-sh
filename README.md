@@ -16,21 +16,19 @@ See <a href="https://www.billmyservices.com">www.billmyservices.com</a> for deta
 
 ### Download
 
-You only need the `wsb-cli` script file but is better if you test your environment running the `test` script.
+You only need the `wsb-cli` script file.
 
-You can download directly the files running:
+You can download directly running:
 
 ```
 $ wget https://raw.githubusercontent.com/billmyservices/wsb-cli-sh/master/wsb-cli
-...
-$ wget https://raw.githubusercontent.com/billmyservices/wsb-cli-sh/master/test
 ...
 ```
 
 And setting execution permissions:
 
 ```
-$ chmod +x wsb-cli test
+$ chmod +x wsb-cli
 ...
 ```
 
