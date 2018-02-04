@@ -1,5 +1,7 @@
 # Simple Bill My Services shell client
 
+[![Build Status](https://travis-ci.org/billmyservices/wsb-cli-sh.svg?branch=master)](https://travis-ci.org/billmyservices/wsb-cli-sh)
+
 See <a href="https://www.billmyservices.com">www.billmyservices.com</a> for details.
 
 ## How to install
