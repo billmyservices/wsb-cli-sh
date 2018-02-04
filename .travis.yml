@@ -1,0 +1,7 @@
+language: generic
+after_success: |
+  wget https://github.com/billmyservices/wsb-cli-sh/archive/master.tar.gz &&
+  tar xzfv master.tar.gz &&
+  cd wsb-cli-sh-master/ &&
+  ./test
+
