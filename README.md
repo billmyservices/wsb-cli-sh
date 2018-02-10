@@ -71,8 +71,8 @@ You can get both values from your *Bill My Services* account profile creating a 
 Only for testing purposes (**is not guarantee will be available**, counters will be deleted every some time, ...) there is one public account:
 
 ```
-WSB_USERID=50
-WSB_SKEY=M6UxiYsELKKHclwYFfKluzvuwj7Bvtk1pY5RUtPhUb4=
+export WSB_USERID=50
+export WSB_SKEY=M6UxiYsELKKHclwYFfKluzvuwj7Bvtk1pY5RUtPhUb4=
 ```
 
 ### Running your first command
