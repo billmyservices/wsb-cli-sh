@@ -25,7 +25,7 @@ $ wget https://raw.githubusercontent.com/billmyservices/wsb-cli-sh/master/wsb-cl
 ...
 ```
 
-And setting execution permissions:
+And set execution permissions:
 
 ```
 $ chmod +x wsb-cli
