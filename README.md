@@ -84,6 +84,8 @@ $ WSB_USERID=50 WSB_SKEY=M6UxiYsELKKHclwYFfKluzvuwj7Bvtk1pY5RUtPhUb4= ./wsb-cli 
 []
 ```
 
+(The response could contains counters created by other people)
+
 ### Simple example
 
 Set environment variables for the current *shell* session:
