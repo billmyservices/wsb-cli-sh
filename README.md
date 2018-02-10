@@ -66,14 +66,21 @@ You must set at least **two** mandatory environment variables:
 1. **WSB_USERID**, your *Bill My Services* account ID.
 1. **WSB_SKEY**, your *Bill My Services* secret key.
 
-You can get both values from your *Bill My Services* accunt profile.
+You can get both values from your *Bill My Services* account profile creating a new account into https://www.billmyservices.com
+
+Only for testing purposes (**is not guarantee will be available**, counters will be deleted every some time, ...) there is one public account:
+
+```
+WSB_USERID=50
+WSB_SKEY=M6UxiYsELKKHclwYFfKluzvuwj7Bvtk1pY5RUtPhUb4=
+```
 
 ### Running your first command
 
-You can run a `wsb-cli` command with local environment variables:
+You can run a `wsb-cli` command with local environment variables (eg. using the public ones):
 
 ```
-$ WSB_SKEY=secret_key WSB_USERID=47 ./wsb-cli list
+$ WSB_USERID=50 WSB_SKEY=M6UxiYsELKKHclwYFfKluzvuwj7Bvtk1pY5RUtPhUb4= ./wsb-cli list
 []
 ```
 
@@ -82,8 +89,8 @@ $ WSB_SKEY=secret_key WSB_USERID=47 ./wsb-cli list
 Set environment variables for the current *shell* session:
 
 ```
-$ export WSB_SKEY=secret_key
-$ export WSB_USERID=47
+$ export WSB_USERID=50
+$ export WSB_SKEY=M6UxiYsELKKHclwYFfKluzvuwj7Bvtk1pY5RUtPhUb4=
 ```
 
 Creating a simple absolute **counter type** between 0 and 5:
